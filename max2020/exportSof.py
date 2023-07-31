@@ -8,6 +8,7 @@
 @Tested  :   3dsmax 2020
 '''
 '''
+this script is used to export the sof file from current filename depend on statesets.
 if you want run script from maxscript just write a ms file and write:
 python.ExecuteFile @"C:\your script path\exportSof.py"
 '''
