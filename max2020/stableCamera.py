@@ -1,8 +1,8 @@
 '''
 @File    :   stableCamera.py
-@Time    :   2023/09/19 14:05:52
+@Time    :   2023/10/05 23:45:43
 @Author  :   William Smith (Alias)
-@Version :   1.0
+@Version :   1.1
 @Contact :   lifeyf@hotmail.com
 @License :   Copyright © 2022 <William Smith>
 '''
@@ -11,12 +11,43 @@ from pymxs import runtime as rt
 
 selected = rt.selection
 
+
+def repair_key(selection):
+	nodeA = rt.getPropertyController(selection[0].controller, 'pos')
+	keyA = [i for i in nodeA.keys if i.selected]
+	nodeB = rt.getPropertyController(selection[1].controller, 'pos')
+	keyB = [j for j in nodeB.keys if j.selected]
+	
+	if len(keyA) >2 or len(keyA) < 1:
+		return 0
+	if len(keyB) >2 or len(keyB) < 1:
+		return 0
+	
+	timeA = [m.time for m in keyA]
+	timeB = [n.time for n in keyB]
+	
+	flag = rt.Name('select')
+	
+	if len(keyA)<len(keyB):
+		timeB.remove(timeA[0])
+		rt.addNewKey(nodeA.keys, timeB[0], flag)
+	if len(keyA)>len(keyB):
+		timeA.remove(timeB[0])
+		rt.addNewKey(nodeB.keys, timeA[0], flag)
+	return 1
+
+
 def ensure_camera(selection):
 	if len(selection)>2 or len(selection)<1:
 		return 0
 	for i in selection:
 		if str(rt.classOf(i)) not in ['Targetcamera', 'Targetobject']:
 			return 0
+			
+	if len(selection)==2:
+		if not repair_key(selection):
+			return 0
+	
 	return [len(selection), selection]
 
 
@@ -76,12 +107,12 @@ def set_single_tangent(key):
 	a = key[1].value - key[0].value
 	b = key[1].time.ticks - key[0].time.ticks
 	
-	key[0].outTangent = a*26/b
-	key[0].inTangent = -a*26/b
+	key[0].outTangent = a*25/b
+	key[0].inTangent = -a*25/b
 	lockHandle(key[0])
 	
-	key[1].inTangent = -a*26/b
-	key[1].outTangent = a*26/b
+	key[1].inTangent = -a*25/b
+	key[1].outTangent = a*25/b
 	lockHandle(key[1])
 
 
