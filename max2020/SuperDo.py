@@ -1,3 +1,12 @@
+'''
+@File    :   stableCamera.py
+@Time    :   2023/10/05 14:05:48
+@Author  :   William Smith (Alias) 
+@Version :   1.0
+@Contact :   lifeyf@hotmail.com
+@License :   Copyright � 2022 <William Smith>
+'''
+
 #from qtmax import GetQMaxMainWindow
 import MaxPlus
 from PySide2.QtWidgets import QMainWindow, QDockWidget, QToolButton, QToolBar, QAction, QPushButton, QBoxLayout, QWidget

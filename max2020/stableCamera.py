@@ -1,7 +1,7 @@
 '''
 @File    :   stableCamera.py
 @Time    :   2023/09/19 14:05:52
-@Author  :   William Smith 
+@Author  :   William Smith (Alias)
 @Version :   1.0
 @Contact :   lifeyf@hotmail.com
 @License :   Copyright © 2022 <William Smith>

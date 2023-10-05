@@ -1,7 +1,7 @@
 '''
 @File    :   exportSof.py
 @Time    :   2023/07/30 16:01:04
-@Author  :   William Smith 
+@Author  :   William Smith (Alias)
 @Version :   2.0
 @Contact :   lifeyf@hotmail.com
 @License :   Copyright © 2022 <William Smith>
