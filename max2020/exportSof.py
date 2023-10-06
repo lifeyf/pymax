@@ -4,7 +4,7 @@
 @Author  :   William Smith (Alias)
 @Version :   2.0
 @Contact :   lifeyf@hotmail.com
-@License :   Copyright © 2022 <William Smith>
+@License :   Copyright @ 2022 <William Smith>
 @Tested  :   3dsmax 2020
 '''
 '''
@@ -16,11 +16,9 @@ python.ExecuteFile @"C:\your script path\exportSof.py"
 import os
 from pymxs import runtime as rt
 
-file_name = rt.maxFileName.encode('utf-8')
-file_pos = rt.maxFilePath.encode('utf-8')
 
 
-def project_test(filepos):
+def sof_project_test(file_pos):
 	'''
 	test if the file path and the sof path is in right place return sof root path.
 	or false, if path not right.
@@ -32,7 +30,7 @@ def project_test(filepos):
 			return sofpos
 	return False
 
-def generate_save_pos(file_inpath, sof_path):
+def sof_generate_save_pos(file_inpath, sof_path):
 	word_end_index = file_inpath.find("cam\\")
 	word_end = file_inpath[word_end_index + 4:]
 	sof_think_path = sof_path + word_end
@@ -43,7 +41,7 @@ def generate_save_pos(file_inpath, sof_path):
 		return sof_path
 
 
-def save_sof(sofFileLocation, selected):
+def sof_save_sof(sofFileLocation, selected, file_name):
 	sofFileLocation = sofFileLocation + file_name[:-4] + '.sof'
 	sofFileLocation_decode = sofFileLocation.decode("utf-8")
 	print(sofFileLocation_decode)
@@ -59,7 +57,7 @@ def save_sof(sofFileLocation, selected):
 
 
 
-class SelectTest:
+class SofSelectTest:
 	def __init__(self, selection):
 		self.selected = [i for i in selection]
 		self.islegal = self.test_select()
@@ -97,7 +95,7 @@ class SelectTest:
 		return self.__s_test() and self.__s_class_test() and self.__s_frozen_test()
 
 
-class ContextState(object):
+class SofContextState(object):
 	def __init__(self, selection):
 		self.G_state = rt.hideByCategory.geometry
 		self.H_state = rt.hideByCategory.helpers
@@ -154,21 +152,25 @@ class ContextState(object):
 		
 		rt.redrawViews()
 
-def main(selected):
-	project_judge =  project_test(file_pos)
+def sof_do_save(selected, file_name, file_pos):
+	project_judge = sof_project_test(file_pos)
 	if project_judge:
-		save_pos = generate_save_pos(file_pos, project_judge)
-		save_sof(save_pos, selected)
+		save_pos = sof_generate_save_pos(file_pos, project_judge)
+		sof_save_sof(save_pos, selected, file_name)
 		print("ExportSucceed")
 
-if __name__ == "__main__":
+def sof_save_main():
+	file_name = rt.maxFileName.encode('utf-8')
+	file_pos = rt.maxFilePath.encode('utf-8')
 	current_selected = rt.getCurrentSelection()
-	test = SelectTest(current_selected)
+	test = SofSelectTest(current_selected)
 	if test.islegal:
-		with ContextState(current_selected) as f:
-			main(current_selected)
+		with SofContextState(current_selected) as f:
+			sof_do_save(current_selected, file_name, file_pos)
 	rt.select(current_selected)
 
+if __name__ == "__main__":
+	sof_save_main()
 
 
 

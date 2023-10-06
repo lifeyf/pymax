@@ -4,12 +4,10 @@
 @Author  :   William Smith (Alias)
 @Version :   1.1
 @Contact :   lifeyf@hotmail.com
-@License :   Copyright © 2022 <William Smith>
+@License :   Copyright @ 2022 <William Smith>
 '''
 
 from pymxs import runtime as rt
-
-selected = rt.selection
 
 
 def repair_key(selection):
@@ -18,22 +16,28 @@ def repair_key(selection):
 	nodeB = rt.getPropertyController(selection[1].controller, 'pos')
 	keyB = [j for j in nodeB.keys if j.selected]
 	
-	if len(keyA) >2 or len(keyA) < 1:
+	if len(keyA) >2 or len(keyB) > 2:
 		return 0
-	if len(keyB) >2 or len(keyB) < 1:
+	if len(keyA) <2 and len(keyB) < 2:
 		return 0
-	
 	timeA = [m.time for m in keyA]
 	timeB = [n.time for n in keyB]
 	
 	flag = rt.Name('select')
 	
 	if len(keyA)<len(keyB):
-		timeB.remove(timeA[0])
-		rt.addNewKey(nodeA.keys, timeB[0], flag)
+		try:
+			rt.addNewKey(nodeA.keys, timeB[0], flag)
+			rt.addNewKey(nodeA.keys, timeB[1], flag)
+		except:
+			pass
 	if len(keyA)>len(keyB):
-		timeA.remove(timeB[0])
-		rt.addNewKey(nodeB.keys, timeA[0], flag)
+		try:
+			rt.addNewKey(nodeB.keys, timeA[0], flag)
+			rt.addNewKey(nodeB.keys, timeA[1], flag)
+		except:
+			pass
+		
 	return 1
 
 
@@ -122,7 +126,8 @@ def set_tangent(selected_keys):
 		set_single_tangent(i)
 	return "OK"
 
-def main():
+def stable_camera_main():
+	selected = rt.selection
 	cameras = ensure_camera(selected)
 	if cameras != 0:
 		for i in cameras[1]:
@@ -135,4 +140,4 @@ def main():
 		print("Error")
 
 if __name__ == "__main__":
-	main()
+	stable_camera_main()
