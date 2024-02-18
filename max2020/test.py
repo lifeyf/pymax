@@ -1,2 +1,1 @@
-import sys
-print(sys.argv[0])
+print(11111111111111111)
