@@ -12,9 +12,10 @@ this script is used to export the sof file from current filename depend on state
 if you want run script from maxscript just write a ms file and write:
 python.ExecuteFile @"C:\your script path\exportSof.py"
 '''
-
 import os
+import re
 from pymxs import runtime as rt
+from PySide2.QtWidgets import QMessageBox
 
 
 
@@ -24,13 +25,24 @@ def sof_project_test(file_pos):
 	or false, if path not right.
 	'''
 	test_pos =  file_pos.find("02-Output\\3D\\cam\\")
-	if test_pos>0:
+	name_exam = re.search(r"\d+-+[a-zA-Z]+-+[a-zA-Z]+-+.+\\?", file_pos)
+	if test_pos<=0 or not name_exam:
+		return False
 		sofpos = file_pos[:test_pos] + "02-Output\\Vfx\\sof\\"
+		if os.path.exists(sofpos.decode("utf-8")):
+			return sofpos
+	if name_exam:
+		project_name = name_exam.group(0).split('\\')[0]
+		sofpos = "\\\\192.168.100.249\\myway-projects\\" + project_name + "\\02-Output\\vfx\\sof\\"
 		if os.path.exists(sofpos.decode("utf-8")):
 			return sofpos
 	return False
 
 def sof_generate_save_pos(file_inpath, sof_path):
+	"""
+	file_inpath: current max file place.
+	sof_path:    current detected sof save path.
+	"""
 	word_end_index = file_inpath.find("cam\\")
 	word_end = file_inpath[word_end_index + 4:]
 	sof_think_path = sof_path + word_end
@@ -54,6 +66,7 @@ def sof_save_sof(sofFileLocation, selected, file_name):
 	stateSets.CompositorLink.UpdateToLink()
 	masterState.ObjectStateSet.Reset()
 	stateSets.CompositorLink.ResetLink()
+	return sofFileLocation_decode
 
 
 
@@ -151,22 +164,27 @@ class SofContextState(object):
 			x.INodeLayerProperties.layer.on = y
 		
 		rt.redrawViews()
+def message(main_window, sofexported):
+    message = QMessageBox()
+    text = "Export Succeed!, file at:\n" + sofexported
+    message.information(main_window, "sof Export", text)
 
-def sof_do_save(selected, file_name, file_pos):
+def sof_do_save(selected, file_name, file_pos, main_window):
 	project_judge = sof_project_test(file_pos)
 	if project_judge:
 		save_pos = sof_generate_save_pos(file_pos, project_judge)
-		sof_save_sof(save_pos, selected, file_name)
-		print("ExportSucceed")
+		sofexported = sof_save_sof(save_pos, selected, file_name)
+		message(main_window, sofexported)
 
-def sof_save_main():
+
+def sof_save_main(main_window):
 	file_name = rt.maxFileName.encode('utf-8')
 	file_pos = rt.maxFilePath.encode('utf-8')
 	current_selected = rt.getCurrentSelection()
 	test = SofSelectTest(current_selected)
 	if test.islegal:
 		with SofContextState(current_selected) as f:
-			sof_do_save(current_selected, file_name, file_pos)
+			sof_do_save(current_selected, file_name, file_pos, main_window)
 	rt.select(current_selected)
 
 if __name__ == "__main__":

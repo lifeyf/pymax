@@ -17,14 +17,14 @@ from PySide2 import QtGui
 from PySide2.QtGui import QColor, QPalette
 from pymxs import runtime as rt
 
-sys.path.append(os.getcwd())
-sys.path.append('D:\\project\\max2020\\script\\pymax\\max2020')
+work_path = os.path.dirname(__file__)
+sys.path.append(work_path)
 
-from exportSof import sof_save_main
-from stableCamera import stable_camera_main
-from proxySwitch import proxy_switch_main
-from transformLock import transform_lock_main
-from cleanMaterial import clean_material_main
+from superdo_exportSof import sof_save_main
+from superdo_stableCamera import stable_camera_main
+from superdo_proxySwitch import proxy_switch_main
+from superdo_transformLock import transform_lock_main
+from superdo_cleanMaterial import clean_material_main
 
 
 main_window = MaxPlus.GetQMaxMainWindow()
@@ -113,7 +113,7 @@ def main():
 	
 	main_widget.dockLocationChanged.connect(lambda event:change_layout(event, box, inner))
 	main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, main_widget)
-	main_widget.setFloating(True)
+	#main_widget.setFloating(True)
 	main_widget.show()
 
 def change_color_all_do():
@@ -169,7 +169,7 @@ def stacamera_click():
 #################save sof #######################
 
 def exportsof_click():
-	sof_save_main()
+	sof_save_main(main_window)
 
 #################save sof end#######################
 
