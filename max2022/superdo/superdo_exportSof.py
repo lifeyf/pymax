@@ -34,7 +34,7 @@ def sof_project_test(file_pos):
 	if name_exam:
 		project_name = name_exam.group(0).split('\\')[0]
 		sofpos = "\\\\192.168.100.249\\myway-projects\\" + project_name + "\\02-Output\\vfx\\sof\\"
-		if os.path.exists(sofpos.decode("utf-8")):
+		if os.path.exists(sofpos):
 			return sofpos
 	return False
 
@@ -46,7 +46,7 @@ def sof_generate_save_pos(file_inpath, sof_path):
 	word_end_index = file_inpath.find("cam\\")
 	word_end = file_inpath[word_end_index + 4:]
 	sof_think_path = sof_path + word_end
-	decode_path = sof_think_path.decode("utf-8")
+	decode_path = sof_think_path
 	if os.path.exists(decode_path) :
 		return sof_think_path
 	else:
@@ -55,7 +55,7 @@ def sof_generate_save_pos(file_inpath, sof_path):
 
 def sof_save_sof(sofFileLocation, selected, file_name):
 	sofFileLocation = sofFileLocation + file_name[:-4] + '.sof'
-	sofFileLocation_decode = sofFileLocation.decode("utf-8")
+	sofFileLocation_decode = sofFileLocation
 	print(sofFileLocation_decode)
 	stateSetsDotNetObject = rt.dotNetObject("Autodesk.Max.StateSets.Plugin")
 	stateSets = stateSetsDotNetObject.Instance
@@ -178,8 +178,8 @@ def sof_do_save(selected, file_name, file_pos, main_window):
 
 
 def sof_save_main(main_window):
-	file_name = rt.maxFileName.encode('utf-8')
-	file_pos = rt.maxFilePath.encode('utf-8')
+	file_name = rt.maxFileName
+	file_pos = rt.maxFilePath
 	current_selected = rt.getCurrentSelection()
 	test = SofSelectTest(current_selected)
 	if test.islegal:
@@ -188,9 +188,6 @@ def sof_save_main(main_window):
 	rt.select(current_selected)
 
 if __name__ == "__main__":
-	sof_save_main()
-
-
-
-
-
+	from qtmax import GetQMaxMainWindow
+	main_window = GetQMaxMainWindow()
+	sof_save_main(main_window)
